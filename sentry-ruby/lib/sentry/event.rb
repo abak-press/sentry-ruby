@@ -7,6 +7,7 @@ require 'sentry/backtrace'
 require 'sentry/utils/real_ip'
 require 'sentry/utils/request_id'
 require 'sentry/utils/custom_inspection'
+require 'oj'
 
 module Sentry
   # This is an abstract class that defines the shared attributes of an event.
@@ -152,7 +153,7 @@ module Sentry
 
     # @return [Hash]
     def to_json_compatible
-      JSON.parse(JSON.generate(to_hash))
+      Oj.load(Oj.dump(to_hash, mode: :compat), mode: :compat)
     end
 
     private

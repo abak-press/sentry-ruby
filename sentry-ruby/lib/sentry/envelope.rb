@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'oj'
+
 module Sentry
   # @api private
   class Envelope
@@ -19,7 +21,7 @@ module Sentry
       end
 
       def to_s
-        [JSON.generate(@headers), JSON.generate(@payload)].join("\n")
+        [Oj.dump(@headers, mode: :compat), Oj.dump(@payload, mode: :compat)].join("\n")
       end
 
       def serialize
@@ -40,7 +42,7 @@ module Sentry
 
       def size_breakdown
         payload.map do |key, value|
-          "#{key}: #{JSON.generate(value).bytesize}"
+          "#{key}: #{Oj.dump(value, mode: :compat).bytesize}"
         end.join(", ")
       end
 
