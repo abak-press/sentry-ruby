@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sentry/transport"
+require 'oj'
 
 module Sentry
   class Client
@@ -201,7 +202,7 @@ module Sentry
         end
 
       if async_block.arity == 2
-        hint = JSON.parse(JSON.generate(hint))
+        hint = Oj.load(Oj.dump(hint, mode: :compat), mode: :compat)
         async_block.call(event_hash, hint)
       else
         async_block.call(event_hash)

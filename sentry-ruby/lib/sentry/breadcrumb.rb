@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'oj'
+
 module Sentry
   class Breadcrumb
     DATA_SERIALIZATION_ERROR_MESSAGE = "[data were removed due to serialization issues]"
@@ -54,7 +56,7 @@ module Sentry
 
     def serialized_data
       begin
-        ::JSON.parse(::JSON.generate(@data))
+        Oj.load(Oj.dump(@data, mode: :compat), mode: :compat)
       rescue Exception => e
         Sentry.logger.debug(LOGGER_PROGNAME) do
           <<~MSG

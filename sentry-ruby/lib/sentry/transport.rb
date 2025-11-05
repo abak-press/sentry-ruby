@@ -3,6 +3,7 @@
 require "json"
 require "base64"
 require "sentry/envelope"
+require 'oj'
 
 module Sentry
   class Transport
@@ -82,7 +83,7 @@ module Sentry
         serialized_items << item
       end
 
-      data = [JSON.generate(envelope.headers), *serialized_results].join("\n") unless serialized_results.empty?
+      data = [Oj.dump(envelope.headers, mode: :compat), *serialized_results].join("\n") unless serialized_results.empty?
 
       [data, serialized_items]
     end
